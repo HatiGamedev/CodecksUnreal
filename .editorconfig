@@ -10,11 +10,13 @@ indent_style = tab
 indent_size = 2
 tab_width = 2
 trim_trailing_whitespace = false
+insert_final_newline = true
 
 # MSBuild
 [*.{csproj,proj,projitems,shproj,fsproj,target,props}]
 indent_style = space
 indent_size = 2
+insert_final_newline = true
 
 # XML config files
 [*.{config,nuspec,resx,natvis}]
