@@ -27,6 +27,7 @@ void UCodecksUserReportRequest::BeginDestroy()
 	UObject::BeginDestroy();
 	FScreenshotRequest::OnScreenshotCaptured().RemoveAll(this);
 	checkSlow(GEngine);
+	checkSlow(GEngine->GameViewport);
 	GEngine->GameViewport->OnScreenshotCaptured().RemoveAll(this);
 }
 
@@ -100,7 +101,7 @@ void UCodecksUserReportRequest::AttachIntermediateScreenshot(bool bShowUI)
 
 		FScreenshotRequest::RequestScreenshot(/*bShowUI=*/bShowUI);
 
-		WaitForScreenshot.BusyWait();
+		(void)WaitForScreenshot.Wait();
 
 		GEngine->GameViewport->OnScreenshotCaptured().Remove(Delegate);
 	});
@@ -216,7 +217,7 @@ void UCodecksUserReportRequest::CreateReport(const TFunction<void(UCodecksUserRe
 		FJsonSerializer::Deserialize(JsonReader, JsonObject);
 
 		const TArray<TSharedPtr<FJsonValue>>* UploadUrls = nullptr;
-		JsonObject->TryGetArrayField("uploadUrls", UploadUrls);
+		JsonObject->TryGetArrayField(TEXT("uploadUrls"), UploadUrls);
 
 		this->UploadAttachments(UploadUrls, UpdateCall, /*OnComplete=*/ [JsonObject, UpdateCall, this]() {
 			FJsonObjectWrapper WrappedJson;
@@ -236,8 +237,8 @@ void UCodecksUserReportRequest::CreateReport(const TFunction<void(UCodecksUserRe
 	// Calculate total bytes
 	TotalBytesToSend = HttpRequest->GetContentLength();
 
-	HttpRequest->OnRequestProgress().BindWeakLambda(this, [this](FHttpRequestPtr Request, int32 BytesSent, int32 /*BytesReceived*/) {
-		const float Progress = static_cast<float>(BytesSent) / TotalBytesToSend;
+	HttpRequest->OnRequestProgress64().BindWeakLambda(this, [this](FHttpRequestPtr Request, uint64 BytesSent, uint64 /*BytesReceived*/) {
+		const float Progress = static_cast<double>(BytesSent) / TotalBytesToSend;
 		OnProgress.Broadcast(Progress);
 	});
 
@@ -288,11 +289,11 @@ void UCodecksUserReportRequest::UploadAttachments(const TArray<TSharedPtr<FJsonV
 			{
 				TSharedPtr<FJsonObject> UploadObject = UploadUrl->AsObject();
 
-				const FString UploadFilename = UploadObject->GetStringField("fileName");
-				const FString UploadURL = UploadObject->GetStringField("url");
+				const FString UploadFilename = UploadObject->GetStringField(TEXT("fileName"));
+				const FString UploadURL = UploadObject->GetStringField(TEXT("url"));
 
 				// Those get copied to the final request
-				const TSharedPtr<FJsonObject> UploadMetaFields = UploadObject->GetObjectField("fields");
+				const TSharedPtr<FJsonObject> UploadMetaFields = UploadObject->GetObjectField(TEXT("fields"));
 
 				// Has data for file?
 				if (FAttachedFile* AttachedFile = AttachedFiles.FindByPredicate([&UploadFilename](const FAttachedFile& A) { return A.Filename.Compare(UploadFilename) == 0; }))
@@ -386,7 +387,7 @@ void UCodecksUserReportRequest::UploadAttachments(const TArray<TSharedPtr<FJsonV
 
 						uint32 BytesSentTillNow = TotalBytesSent;
 
-						UploadRequest->OnRequestProgress().BindLambda([this, BytesSentTillNow](FHttpRequestPtr Request, int32 BytesSent, int32 /*BytesReceived*/) {
+						UploadRequest->OnRequestProgress64().BindLambda([this, BytesSentTillNow](FHttpRequestPtr Request, uint64 BytesSent, uint64 /*BytesReceived*/) {
 							const float Progress = static_cast<float>(BytesSentTillNow + BytesSent) / TotalBytesToSend;
 							AsyncTask(ENamedThreads::GameThread, [Progress, &ProgressDelegate(OnProgress)] {
 								ProgressDelegate.Broadcast(Progress);
