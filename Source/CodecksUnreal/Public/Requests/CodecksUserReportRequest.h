@@ -158,9 +158,9 @@ protected:
 	};
 
 	UPROPERTY(Transient)
-	uint32 TotalBytesToSend = 0;
+	uint64 TotalBytesToSend = 0;
 	UPROPERTY(Transient)
-	uint32 TotalBytesSent = 0;
+	uint64 TotalBytesSent = 0;
 
 	TArray<FAttachedFile> AttachedFiles;
 
