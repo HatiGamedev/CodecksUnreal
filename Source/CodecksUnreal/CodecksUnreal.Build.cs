@@ -6,7 +6,7 @@ public class CodecksUnreal : ModuleRules
 {
 	public CodecksUnreal(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = ModuleRules.PCHUsageMode.NoPCHs;
 
 		PublicIncludePaths.AddRange(
 			new string[]
@@ -57,4 +57,4 @@ public class CodecksUnreal : ModuleRules
 			}
 		);
 	}
-}}
+}

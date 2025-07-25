@@ -1,7 +1,8 @@
 ﻿// Copyright(C) https://github.com/battyRabbit/CodecksUnreal/graphs/contributors
 
-
 #include "CodecksUnreal.h"
+
+#include <Modules/ModuleManager.h>
 
 DEFINE_LOG_CATEGORY(LogCodecksUnreal);
 

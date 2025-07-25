@@ -2,6 +2,8 @@
 
 #include "Settings/CodecksSettings.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(CodecksSettings)
+
 UCodecksSettings::UCodecksSettings()
 {
 	CategoryName = "Plugins";
@@ -9,4 +11,3 @@ UCodecksSettings::UCodecksSettings()
 
 	CodecksApiURL = "https://api.codecks.io";
 }
-

@@ -2,9 +2,12 @@
 
 #include "CodecksUnrealEditor.h"
 
-#include "Settings/CodecksSettings.h"
-
 #include <ISettingsModule.h>
+#include <Logging/MessageLog.h>
+#include <Logging/TokenizedMessage.h>
+#include <Modules/ModuleManager.h>
+
+#include "Settings/CodecksSettings.h"
 
 #define LOCTEXT_NAMESPACE "FCodecksUnrealEditorModule"
 
@@ -28,7 +31,7 @@ void FCodecksUnrealEditorModule::StartupModule()
 }
 
 void FCodecksUnrealEditorModule::ShutdownModule()
-{ }
+{}
 
 #undef LOCTEXT_NAMESPACE
 

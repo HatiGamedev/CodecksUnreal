@@ -2,6 +2,9 @@
 
 #include <CoreMinimal.h>
 
+#include <Misc/AutomationTest.h>
+#include <UObject/Package.h>
+
 #include "Requests/CodecksUserReportRequest.h"
 
 
@@ -43,5 +46,3 @@ void FCodecksUnrealReportRequest::Define()
 		Request = nullptr;
 	});
 }
-
-

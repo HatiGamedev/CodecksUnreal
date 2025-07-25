@@ -2,17 +2,22 @@
 
 #include "Requests/CodecksUserReportRequest.h"
 
-#include "CodecksUnreal.h"
-#include "Settings/CodecksSettings.h"
-
+#include <Engine/Engine.h>
+#include <Engine/GameViewportClient.h>
 #include <HttpModule.h>
 #include <ImageUtils.h>
 #include <ImageWrapperHelper.h>
-
 #include <Interfaces/IHttpResponse.h>
-
+#include <Serialization/JsonSerializer.h>
+#include <Serialization/JsonWriter.h>
 #include <Tasks/Task.h>
 #include <Tasks/Pipe.h>
+#include <UnrealClient.h>
+
+#include "CodecksUnreal.h"
+#include "Settings/CodecksSettings.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(CodecksUserReportRequest)
 
 UCodecksUserReportRequest::UCodecksUserReportRequest()
 {}
@@ -21,6 +26,7 @@ void UCodecksUserReportRequest::BeginDestroy()
 {
 	UObject::BeginDestroy();
 	FScreenshotRequest::OnScreenshotCaptured().RemoveAll(this);
+	checkSlow(GEngine);
 	GEngine->GameViewport->OnScreenshotCaptured().RemoveAll(this);
 }
 
@@ -72,7 +78,7 @@ void UCodecksUserReportRequest::AttachIntermediateScreenshot(bool bShowUI)
 	const FString DateName = FDateTime::Now().ToString(TEXT("%Y-%m-%d %H-%M-%S"));
 	const FString Filename = DateName + ".png";
 
-	int32 NewScreenshot = AttachedFiles.Add(FAttachedFile{Filename});
+	int32 NewScreenshot = AttachedFiles.Add(FAttachedFile {Filename});
 
 	ScreenshotPipe.Launch(TEXT("Codecks_FetchScreenshot"), [this, NewScreenshot, bShowUI]() {
 		UE::Tasks::FTaskEvent WaitForScreenshot(UE_SOURCE_LOCATION);
@@ -254,7 +260,7 @@ void UCodecksUserReportRequest::Succeed(ECodecksRequestState NextState)
 		}
 	}
 	else
-	{ }
+	{}
 }
 
 void UCodecksUserReportRequest::ResetState()
@@ -271,7 +277,6 @@ void UCodecksUserReportRequest::UploadAttachments(const TArray<TSharedPtr<FJsonV
 	UpdateCall(this);
 
 	Async(EAsyncExecution::TaskGraph, [this, UploadUrls, UpdateCall, OnComplete]() {
-
 		// Wait for remaining intermediate screenshots
 		ScreenshotPipe.WaitUntilEmpty();
 

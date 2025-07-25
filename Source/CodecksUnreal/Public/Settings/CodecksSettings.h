@@ -4,6 +4,8 @@
 
 #include <CoreMinimal.h>
 
+#include <Engine/DeveloperSettings.h>
+
 #include "CodecksSettings.generated.h"
 
 class UCodecksUserReportService;

@@ -2,11 +2,13 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
+
+#include <Modules/ModuleInterface.h>
 
 class FCodecksUnrealEditorModule : public IModuleInterface
 {
 public:
-    virtual void StartupModule() override;
-    virtual void ShutdownModule() override;
+	virtual void StartupModule() override;
+	virtual void ShutdownModule() override;
 };
