@@ -1,4 +1,6 @@
-﻿using UnrealBuildTool;
+﻿// Copyright(C) https://github.com/battyRabbit/CodecksUnreal/graphs/contributors
+
+using UnrealBuildTool;
 
 public class CodecksUnrealEditor : ModuleRules
 {

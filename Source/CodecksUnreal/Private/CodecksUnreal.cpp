@@ -1,4 +1,5 @@
-﻿// Copyright(C) battyRabbit UG (limited liability). All Rights Reserved.
+﻿// Copyright(C) https://github.com/battyRabbit/CodecksUnreal/graphs/contributors
+
 
 #include "CodecksUnreal.h"
 

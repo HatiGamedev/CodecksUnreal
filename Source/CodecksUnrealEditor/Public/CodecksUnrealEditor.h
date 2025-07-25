@@ -1,4 +1,6 @@
-﻿#pragma once
+﻿// Copyright(C) https://github.com/battyRabbit/CodecksUnreal/graphs/contributors
+
+#pragma once
 
 #include "CoreMinimal.h"
 

@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright(C) https://github.com/battyRabbit/CodecksUnreal/graphs/contributors
 
 using UnrealBuildTool;
 
@@ -57,4 +57,4 @@ public class CodecksUnreal : ModuleRules
 			}
 		);
 	}
-}
+}}
